@@ -1,79 +1,239 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tickets dell'Amore ❤️</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #ffe6e6;
-        }
-        .container {
-            max-width: 500px;
-            margin: 20px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .ticket {
-            padding: 15px;
-            margin: 10px 0;
-            background: #ff9999;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            color: white;
-            transition: 0.3s;
-        }
-        .ticket.used {
-            background: #d3d3d3;
-            text-decoration: line-through;
-            cursor: default;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carnet dell'Amore per Alessandro</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
+    body {
+      font-family: 'Dancing Script', cursive;
+      text-align: center;
+      background: url('https://source.unsplash.com/1600x900/?love,romantic') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 25px;
+      border-radius: 15px;
+      min-height: auto;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(5px);
+    }
+    h2 { color: #D81B60; font-size: 3em; }
+    p.intro { color: #880E4F; font-size: 1.5em; }
+    .red-string {
+      width: 90%;
+      height: 3px;
+      background: #D81B60;
+      margin: 20px auto;
+    }
+    #ticket-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px; /* Spazio tra i ticket */
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.ticket {
+  width: 160px;
+  height: 90px;
+  background: linear-gradient(135deg, #D81B60, #880E4F);
+  border: 2px dashed #fff;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  font-size: 2em;
+}
+
+/* Quando lo schermo diventa più piccolo, i ticket si dispongono in colonna */
+@media (max-width: 768px) {
+  #ticket-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ticket {
+    width: 90%; /* Si allarga su tutta la larghezza */
+    height: auto;
+    padding: 20px;
+    font-size: 1.2em;
+  }
+}
+    .ticket.used {
+      background: linear-gradient(135deg, #999, #666);
+      cursor: default;
+      opacity: 0.6;
+    }
+    .ticket:hover:not(.used) {
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .modal {
+      display: none;
+      position: absolute;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(5px);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: 20% auto;
+      text-align: center;
+      position: relative;
+      font-size: 1.5em;
+    }
+    .close {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Il tuo Carnet dell'Amore ❤️</h2>
-        <p>Clicca su un ticket per utilizzarlo!</p>
-        <div id="ticket-list"></div>
+  <div class="container">
+    <h2>Carnet dell'Amore ❤️</h2>
+    <p class="intro">Benvenuto, Alessandro, in questo piccolo scrigno di emozioni e sorprese!</p>
+    <div class="red-string"></div>
+    <div id="ticket-list"></div>
+  </div>
+
+  <div id="ticket-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3 id="modal-title"></h3>
+      <p id="modal-description"></p>
     </div>
-	<script>
-		const scriptUrl = "https://script.google.com/macros/s/AKfycbxGtDDZLUzJMrYbXUd4Szh0V3bdjaCJkh7sl8uvk06140L9u-QvlVo3RHVKCZeTmzZTsQ/exec";
+  </div>
 
-		async function fetchTickets() {
-			const response = await fetch(scriptUrl);
-			const data = await response.json();
-			renderTickets(data);
-		}
+  <script>
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbxGtDDZLUzJMrYbXUd4Szh0V3bdjaCJkh7sl8uvk06140L9u-QvlVo3RHVKCZeTmzZTsQ/exec";
+    async function fetchTickets() {
+      try {
+        const response = await fetch(scriptUrl);
+        const data = await response.json();
+        renderTickets(data);
+      } catch (error) {
+        console.error("Errore nel recupero dei ticket:", error);
+      }
+    }
+ 
 
-		function renderTickets(rows) {
-			const ticketList = document.getElementById("ticket-list");
-			ticketList.innerHTML = "";
-			rows.slice(1).forEach((row, index) => {
-				const [title, description, status] = row;
-				const div = document.createElement("div");
-				div.classList.add("ticket");
-				if (status === "Usato") div.classList.add("used");
-				div.textContent = title;
-				div.onclick = () => useTicket(index + 2);
-				ticketList.appendChild(div);
-			});
-		}
+        function renderTickets(rows) {
+  const ticketList = document.getElementById("ticket-list");
+  ticketList.innerHTML = "";
 
-		async function useTicket(rowNumber) {
-			await fetch(scriptUrl, {
-				method: "POST",
-				headers: { "Content-Type": "application/x-www-form-urlencoded" },
-				body: `row=${rowNumber}`
-			});
-			fetchTickets();
-		}
+  rows.slice(1).forEach((row, index) => {
+    const [title, Name, description, status] = row;
+    const div = document.createElement("div");
+    div.classList.add("ticket");
+    
+    if (status === "Usato") {
+      div.classList.add("used");
+    }
+    
+    div.onclick = () => openModal(Name, description, index + 2, status); // Passiamo la riga
+    
+    div.textContent = title;
+    ticketList.appendChild(div);
+  });
+}
+        function openModal(title, description, row, status) {
+      const modal = document.getElementById("ticket-modal");
+      document.getElementById("modal-title").textContent = title;
+      document.getElementById("modal-description").textContent = description;
 
-		fetchTickets();
-	</script>
-	</body>
+      const modalContent = document.querySelector(".modal-content");
+
+      // Rimuove pulsanti precedenti
+      const oldButton = document.getElementById("use-ticket-button");
+      if (oldButton) oldButton.remove();
+
+      // Se il ticket è disponibile, aggiunge il pulsante "Usa Ticket"
+      if (status !== "Usato") {
+        const button = document.createElement("button");
+        button.textContent = "Usa Ticket";
+        button.id = "use-ticket-button";
+        button.style.padding = "10px 15px";
+        button.style.marginTop = "15px";
+        button.style.backgroundColor = "#D81B60";
+        button.style.color = "white";
+        button.style.border = "none";
+        button.style.borderRadius = "5px";
+        button.style.cursor = "pointer";
+
+        button.onclick = () => markAsUsed(row, modal);
+
+        modalContent.appendChild(button);
+      }
+
+      modal.style.display = "block";
+    }
+    document.querySelector(".close").addEventListener("click", function () {
+      document.getElementById("ticket-modal").style.display = "none";
+      });
+
+      // Chiude il modal anche quando si clicca fuori
+      window.onclick = function (event) {
+        const modal = document.getElementById("ticket-modal");
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+    function markAsUsed(row, modal) {
+      fetch("https://script.google.com/macros/s/AKfycbxGtDDZLUzJMrYbXUd4Szh0V3bdjaCJkh7sl8uvk06140L9u-QvlVo3RHVKCZeTmzZTsQ/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `row=${row}`
+      })
+      .then(response => response.text())
+      .then(data => {
+        if (data.trim() === "OK") {
+          alert("Ticket usato!");
+          modal.style.display = "none";
+
+          // Aggiorna visivamente il ticket nella pagina
+          document.querySelectorAll(".ticket")[row - 2].classList.add("used");
+        } else {
+          alert("Errore nell'uso del ticket.");
+        }
+      })
+      .catch(error => console.error("Errore:", error));
+    };
+    fetchTickets();
+  </script>
+</body>
 </html>
+
