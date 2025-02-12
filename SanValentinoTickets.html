@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carnet dell'Amore per Alessandro</title>
+  <title>Per Alessandro</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
     body {
@@ -18,15 +18,16 @@
       padding: 25px;
       border-radius: 15px;
       min-height: auto;
-      background: rgba(255, 255, 255, 0.9);
+      background: linear-gradient(135deg, #3E1F1F, #2B2B2B);
       backdrop-filter: blur(5px);
     }
-    h2 { color: #D81B60; font-size: 3em; }
-    p.intro { color: #880E4F; font-size: 1.5em; }
+    h2 { color: #D4AF37; font-size: 3em; }
+    p.intro { color: #F8F1E4; font-size: 1.5em; }
+    p.intro2 { color: #F8F1E4}
     .red-string {
       width: 90%;
       height: 3px;
-      background: #D81B60;
+      background: #D4AF37;
       margin: 20px auto;
     }
     #ticket-list {
@@ -42,14 +43,14 @@
 .ticket {
   width: 160px;
   height: 90px;
-  background: linear-gradient(135deg, #D81B60, #880E4F);
+  background: linear-gradient(135deg, #6D2932, #6D2932);
   border: 2px dashed #fff;
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  color: white;
+  color: #E6C36B;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
   font-size: 2em;
@@ -122,8 +123,9 @@
 </head>
 <body>
   <div class="container">
-    <h2>Carnet dell'Amore ❤️</h2>
-    <p class="intro">Benvenuto, Alessandro, in questo piccolo scrigno di emozioni e sorprese!</p>
+    <h2>Attimi da Riscattare..</h2>
+    <p class="intro">L’amore è fatto di momenti, di sorprese, di gesti che parlano più delle parole. Ogni ticket sotto è una promessa, e in queste piccole promesse c'è il desiderio di fermare il tempo e dedicarsi solo a noi. Riscatta un attimo, vivilo fino in fondo e custodiscilo nel cuore per sempre.</p>
+    <p class="intro2">Con amore, da Sara</p>
     <div class="red-string"></div>
     <div id="ticket-list"></div>
   </div>
@@ -137,6 +139,15 @@
   </div>
 
   <script>
+  
+  var password = "Ehi tu"; // Cambia questa password
+  var input = prompt("Inserisci la password per accedere:");
+
+  if (input !== password) {
+    alert("Accesso negato!");
+    document.body.innerHTML = ""; // Cancella il contenuto della pagina
+  }
+
     const scriptUrl = "https://script.google.com/macros/s/AKfycbxGtDDZLUzJMrYbXUd4Szh0V3bdjaCJkh7sl8uvk06140L9u-QvlVo3RHVKCZeTmzZTsQ/exec";
     async function fetchTickets() {
       try {
@@ -154,7 +165,7 @@
   ticketList.innerHTML = "";
 
   rows.slice(1).forEach((row, index) => {
-    const [title, Name, description, status] = row;
+    const [title, Name, status, description] = row;
     const div = document.createElement("div");
     div.classList.add("ticket");
     
@@ -186,7 +197,7 @@
         button.id = "use-ticket-button";
         button.style.padding = "10px 15px";
         button.style.marginTop = "15px";
-        button.style.backgroundColor = "#D81B60";
+        button.style.backgroundColor = "#7D0A0A";
         button.style.color = "white";
         button.style.border = "none";
         button.style.borderRadius = "5px";
